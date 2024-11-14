@@ -5,7 +5,7 @@ $(function(e) {
 		lengthChange: false,
 		buttons: [ 'copy', 'excel', 'pdf', 'colvis' ],
 		language: {
-			searchPlaceholder: 'Search...',
+			searchPlaceholder: 'Поиск...',
 			sSearch: '',
 			lengthMenu: '_MENU_ ',
 		}
@@ -16,7 +16,7 @@ $(function(e) {
 	$('#example1').DataTable({
 		language: {
 			responsive:"true",
-			searchPlaceholder: 'Search...',
+			searchPlaceholder: 'Поиск...',
 			sSearch: '',
 			lengthMenu: '_MENU_',
 		}
@@ -36,7 +36,7 @@ $(function(e) {
 			sSearch: '',
 			lengthMenu: '_MENU_',
 		}
-	}); 
+	});
     $('#example-delete tbody').on( 'click', 'tr', function () {
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
@@ -46,11 +46,11 @@ $(function(e) {
             $(this).addClass('selected');
         }
     } );
- 
+
     $('#button').click( function () {
         table.row('.selected').remove().draw( false );
     } );
-	
+
 	//Details display datatable
 	$('#example-1').DataTable( {
 		language: {
