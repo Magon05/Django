@@ -88,9 +88,9 @@
 		<img src="{% static 'assets/images/svgs/loader.svg'%}" alt="loader">
 	</div>
 <!--Page header-->
-	<div class="page-header">
+	<div class="page-header" style="margin: 5.5rem 1.5rem;">
 		<div class="page-leftheader">
-			<h4 class="page-title">Добавление товара</h4>
+			<h4 class="page-title">{{ current_operation }}</h4>
 		</div>
 	</div>
 <!--End Page header-->
@@ -152,9 +152,7 @@
 {% include 'scripts.html' %}
 
 {% block scripts %}
-
 		<script>
-
 			const categorySelect = document.getElementById('category_select');
     		const subcategorySelect = document.getElementById('sub_category_select');
 
@@ -189,9 +187,6 @@
     		{
     			get_subcategories();
 			});
-
 		</script>
-
 		<script src="{% static ''%}assets/js/file-upload.js"></script>
-
 {% endblock scripts %}

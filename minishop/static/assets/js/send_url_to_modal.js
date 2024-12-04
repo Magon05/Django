@@ -4,7 +4,7 @@ function send_url_to_modal_cart(itemId) {
     }
 
 function send_url_to_modal_shop(itemId) {
-        var url = "delete/item_id/".replace('item_id', itemId);
+        var url = "delete_product/item_id/".replace('item_id', itemId);
         document.getElementById('remove-link').setAttribute('action', url);
     }
 
@@ -13,7 +13,7 @@ function send_url_to_modal_category(itemId) {
         document.getElementById('remove-link').setAttribute('action', url);
     }
 
-function send_url_to_modal_category(itemId) {
+function send_url_to_modal_subcategory(itemId) {
         var url = "delete_subcategory/item_id/".replace('item_id', itemId);
         document.getElementById('remove-link').setAttribute('action', url);
     }

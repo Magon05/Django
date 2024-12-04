@@ -1,5 +1,5 @@
 from .models import *
-from django.views.generic import ListView, FormView, DeleteView, CreateView
+from django.views.generic import ListView, FormView, DeleteView, CreateView, UpdateView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
@@ -80,76 +80,84 @@ class Product_info(ListView):
         return context
 
 
-@login_required
-@permission_required('magazine.add_goods', raise_exception=True)
-def create(request):
-    categories = product_category.objects.values('id', 'category_name')
-    sub_categories = {}
-    cart_items_counts = cart.objects.filter(user=request.user).aggregate(total=Sum('quantity'))['total']
-    for i in categories:
-        sub_categories[i['id']] = [u for u in product_subcategory.objects.filter(category_name=i['id']).values('id', 'subcategory_name')]
-    data = {"status": "Заполните все поля", 'categories': categories, 'sub_categories': sub_categories, 'cart_items_counts': cart_items_counts}
+class Create_product(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
-    if request.method == "GET":
-        return render(request, "create_and_edit.html", context=data)
+    model = goods
+    fields = '__all__'
+    permission_required = 'magazine.add_goods'
+    success_url = reverse_lazy('main')
+    template_name = "create_and_edit.html"
 
-    elif request.method == "POST":
-        product_name = request.POST.get("product_name")
-        regular_price = request.POST.get("regular_price")
-        discounted_price = request.POST.get("discounted_price")
-        stock_quantity = request.POST.get("stock_quantity", 1)
-        product_details = request.POST.get("product_details")
-        category = product_category.objects.get(id=int(request.POST.get("category")))
-        sub_category = product_subcategory.objects.get(id=int(request.POST.get("sub_category")))
-        if product_name and regular_price and category:
-            product = goods(product_name=product_name, regular_price=regular_price, discounted_price=discounted_price,
-                         stock_quantity=stock_quantity, product_details=product_details, category=category, sub_category=sub_category)
-            product.save()
-            images = request.FILES.getlist('images', default=None)
-            if images:
-                for image in images:
-                    product_image.objects.create(product=product, image=image)
-            return redirect("main")
-        else:
-            data = {"status": "Ошибка! Вы не заполнили все поля!"}
-            return render(request, "create_and_edit.html", context=data)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = product_category.objects.values('id', 'category_name')
+        context['sub_categories'] = {i['id']: list(product_subcategory.objects.filter(category_name=i['id']).values('id', 'subcategory_name')) for i in context['categories']}
+        context['cart_items_counts'] = cart.objects.filter(user=self.request.user).aggregate(total=Sum('quantity'))['total']
+        context['current_operation'] = 'Добавление товара'
+        return context
 
+    def form_valid(self, form):
+        product = form.save(commit=False)
+        product.category = product_category.objects.get(id=self.request.POST.get("category"))
+        product.sub_category = product_subcategory.objects.get(id=self.request.POST.get("sub_category"))
+        product.save()
 
-@login_required
-@permission_required('magazine.change_goods', raise_exception=True)
-def edit_product(request, pk):
-    categories = product_category.objects.values('id', 'category_name')
-    cart_items_counts = cart.objects.filter(user=request.user).aggregate(total=Sum('quantity'))['total']
-    sub_categories = {}
-    for i in categories:
-        sub_categories[i['id']] = [u for u in product_subcategory.objects.filter(category_name=i['id']).values('id','subcategory_name')]
-    editable_stuff = goods.objects.get(id=pk)
-    data = {"status": "Заполните все поля", 'categories': categories, 'sub_categories': sub_categories, "editable_stuff" : editable_stuff, cart_items_counts: 'cart_items_counts'}
+        images = self.request.FILES.getlist('images', default=None)
+        if images:
+            for image in images:
+                product_image.objects.create(product=product, image=image)
 
-    if request.method == "GET":
-        return render(request, "create_and_edit.html", context=data)
+        return super().form_valid(form)
 
-    elif request.method == "POST":
-        editable_stuff.product_name = request.POST.get("product_name")
-        editable_stuff.regular_price = request.POST.get("regular_price")
-        editable_stuff.discounted_price = request.POST.get("discounted_price")
-        editable_stuff.stock_quantity = request.POST.get("stock_quantity", 1)
-        editable_stuff.category = product_category.objects.get(id=int(request.POST.get("category")))
-        editable_stuff.sub_category = product_subcategory.objects.get(id=int(request.POST.get("sub_category")))
-        product_details = request.POST.get("product_details")
-        if product_details:
-            editable_stuff.product_details = product_details
-        else:
-            editable_stuff.product_details = editable_stuff.product_details
-        editable_stuff.product_image = request.FILES.get('image')
-        editable_stuff.save()
-        images = request.FILES.getlist('images')
-        for image in images:
-            product_image.objects.create(product=editable_stuff, image=image)
-        return redirect("main")
+    def form_invalid(self, form):
+        context = self.get_context_data()
+        context['status'] = "Ошибка! Вы не заполнили все поля или ввели неправильные данные!"
+        return self.render_to_response(context)
+
+    def handle_no_permission(self):
+        return super().handle_no_permission()
 
 
-class Delete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class Edit_product(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+
+    model = goods
+    fields = '__all__'
+    permission_required = 'magazine.change_goods'
+    success_url = reverse_lazy('main')
+    template_name = "create_and_edit.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = product_category.objects.values('id', 'category_name')
+        context['sub_categories'] = {i['id']: list(product_subcategory.objects.filter(category_name=i['id']).values('id', 'subcategory_name')) for i in context['categories']}
+        context['cart_items_counts'] = cart.objects.filter(user=self.request.user).aggregate(total=Sum('quantity'))['total']
+        context['editable_stuff'] = goods.objects.get(id=self.kwargs.get('pk'))
+        context['current_operation'] = 'Изменение товара'
+        return context
+
+    def form_valid(self, form):
+        product = form.save(commit=False)
+        product.category = product_category.objects.get(id=self.request.POST.get("category"))
+        product.sub_category = product_subcategory.objects.get(id=self.request.POST.get("sub_category"))
+        product.save()
+
+        images = self.request.FILES.getlist('images', default=None)
+        if images:
+            for image in images:
+                product_image.objects.create(product=product, image=image)
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        context = self.get_context_data()
+        context['status'] = "Ошибка! Вы не заполнили все поля или ввели неправильные данные!"
+        return self.render_to_response(context)
+
+    def handle_no_permission(self):
+        return super().handle_no_permission()
+
+
+class Delete_product(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
     model = goods
     success_url = reverse_lazy('main')
@@ -333,8 +341,3 @@ class Register(FormView):
         return super(Register, self).form_valid(form)
 
 #------------------------------------------/Аккаунт--------------------------------------
-
-
-
-def test(request):
-    return render(request, 'test.html')
