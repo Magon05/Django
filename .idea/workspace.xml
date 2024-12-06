@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b60f6911-4dd5-4aab-b75c-1c3a3230cc0d" name="Changes" comment="add minishop">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Django.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Django.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="b60f6911-4dd5-4aab-b75c-1c3a3230cc0d" name="Changes" comment="Первоначальное размещение проекта от 06.12.2024">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,24 +18,24 @@
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="a5d450ce-ffcb-4fa6-ad96-162545ec0549" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2o9qw4I1GS5MGCo31jOX6rMqNXv" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/PycharmProjects/Django",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/PycharmProjects/Django&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
